@@ -1,6 +1,7 @@
 "use strict";
 console.log("index script Operating Successfully!"); // 오류 없음 확인
 
+let autho = 0;
 
 // 로그인 API 구현
 document.getElementById('login').addEventListener('click', async function(event) {
@@ -23,12 +24,19 @@ document.getElementById('login').addEventListener('click', async function(event)
         }
         const result = await res.json();
         document.getElementById('message').textContent = result.message;
+        autho = 1;
     } catch (error) {
         console.error('Error:', error);
         alert('로그인 중 오류가 발생했습니다!');
     }
 });
 
-function moveToSignup() { // '/signup' 경로로 이동
+function moveToSignup(){ // '/signup' 경로로 이동
     window.location.href = "/signup";
+}
+
+function moveToDash(){
+    if(autho == 1){
+        window.location.href = "/dashboard";
+    }
 }

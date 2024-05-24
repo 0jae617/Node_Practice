@@ -77,6 +77,12 @@ app.post('/signup', (req, res) => {
     });
 });
 
+// 게시판 접속 설정
+app.get('/dashboard', (req, res) => {
+    res.sendFile(`${__dirname}/public/dashboard.html`);
+})
+
+
 
 // 서버 접속
 app.listen(PORT, ()=>{
