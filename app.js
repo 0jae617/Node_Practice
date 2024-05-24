@@ -83,6 +83,12 @@ app.get('/dashboard', (req, res) => {
 })
 
 
+// 게시글 작성 page 접속 설정
+app.get('/write', (req, res) => {
+    res.sendFile(__dirname + '/public/write.html');
+});
+
+
 
 // 서버 접속
 app.listen(PORT, ()=>{
