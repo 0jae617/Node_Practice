@@ -39,4 +39,7 @@ function moveToDash(){
     if(autho == 1){
         window.location.href = "/dashboard";
     }
+    else{
+        alert("로그인 해주십시오!");
+    }
 }

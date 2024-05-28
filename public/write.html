@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 작성</title>
-    <script src="/write.js" defer></script>
+    <title>게시글 신규 작성</title>
+    <script src="/JS/write.js" defer></script>
 </head>
 
 <body>
-    <h1>게시글 작성</h1>
+    <h1>신규 게시글 작성</h1>
     <form id="writeForm">
         <label for="title">제목:</label><br>
-        <input type="text" id="title" name="title"><br>
+        <input type="text" id="title" name="title"><br><br>
         <label for="author">작성자:</label><br>
-        <input type="text" id="author" name="author"><br>
+        <input type="text" id="author" name="author"><br><br>
         <label for="content">내용:</label><br>
-        <textarea id="content" name="content"></textarea><br><br>
+        <textarea style="width:400px; height:300px; resize:none;" id="content" name="content"></textarea><br><br>
         <button type="submit">submit</button>
     </form>
 </body>
