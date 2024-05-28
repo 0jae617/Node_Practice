@@ -10,7 +10,7 @@ document.getElementById('login').addEventListener('click', async function(event)
     const id = document.getElementById('id').value;
     const password = document.getElementById('psword').value;
 
-    try {
+    try{
         const res = await fetch('/', {
             method: 'POST',
             headers: {
@@ -18,14 +18,13 @@ document.getElementById('login').addEventListener('click', async function(event)
             },
             body: JSON.stringify({ id, password })
         });
-        
-        if (!res.ok) {
+        if(!res.ok){
             throw new Error(`HTTP error! status: ${res.status}`);
         }
         const result = await res.json();
         document.getElementById('message').textContent = result.message;
         autho = 1;
-    } catch (error) {
+    }catch (error){
         console.error('Error:', error);
         alert('로그인 중 오류가 발생했습니다!');
     }
