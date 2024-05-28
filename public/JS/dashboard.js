@@ -1,27 +1,36 @@
 "use strict";
 
-document.addEventListener('DOMContentLoaded', function() {
-    // 서버로부터 게시물 데이터를 가져와서 표시하는 부분
+document.addEventListener('DOMContentLoaded', () => {  // post 목록 가져오기
     fetch('/posts')
         .then(response => response.json())
-        .then(data => {
+        .then(posts => {
             const postsContainer = document.getElementById('posts');
-            data.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <span>${post.title} - ${post.author}</span>
-                    <div class="buttons">
-                        <button onclick="deletePost(${post.id})">삭제</button>
-                    </div>
-                `;
-                postsContainer.appendChild(postElement);
+            posts.forEach(post => {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                postDiv.dataset.id = post.post_id;
+                postDiv.innerHTML = `<h2>${post.title}</h2><p>${post.author}</p>`;
+                postDiv.addEventListener('click', () => loadPost(post.post_id));
+                postsContainer.appendChild(postDiv);
             });
         })
         .catch(error => console.error('Error fetching posts:', error));
 });
 
-function deletePost(id) {
+function loadPost(postId) {  // 특정 id의 게시글 가져오기
+    fetch(`/posts/${postId}`)
+        .then(response => response.json())
+        .then(post => {
+            document.getElementById('post-title').textContent = post.title;
+            document.getElementById('post-author').textContent = `Author: ${post.author}`;
+            document.getElementById('post-body').textContent = post.content;
+            document.getElementById('post-content').style.display = 'block';
+        })
+        .catch(error => console.error('Error fetching post:', error));
+}
+
+
+function deletePost(id) {  // 게시글 삭제 기능
     fetch(`/posts/${id}`, {
         method: 'DELETE'
     })
