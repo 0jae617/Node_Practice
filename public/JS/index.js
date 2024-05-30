@@ -19,16 +19,19 @@ document.getElementById('login').addEventListener('click', async function(event)
             body: JSON.stringify({ id, password })
         });
         if(!res.ok){
-            throw new Error(`HTTP error! status: ${res.status}`);
+            const errorResult = await res.json();
+            throw new Error(errorResult.error || 'Unknown error');
         }
+        
         const result = await res.json();
         document.getElementById('message').textContent = result.message;
         autho = 1;
     }catch (error){
         console.error('Error:', error);
-        alert('로그인 중 오류가 발생했습니다!');
+        alert(`로그인 중 오류가 발생했습니다: ${error.message}`);
     }
 });
+
 
 function moveToSignup(){ // '/signup' 경로로 이동
     window.location.href = "/signup";
@@ -39,6 +42,6 @@ function moveToDash(){
         window.location.href = "/dashboard";
     }
     else{
-        alert("로그인 해주십시오!");
+        alert("로그인 후 이용 바랍니다");
     }
 }

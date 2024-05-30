@@ -34,20 +34,22 @@ app.get('/', (req, res) => {
 })
 
 // 홈페이지 로그인 기능 setting
+let temp = "";     // 로그인 성공 시 아이디 기억 장소
 app.post('/', (req, res) => {
     const { id, password } = req.body;
-    console.log(id, password);         // 아이디 비밀번호 입력 확인
 
     const sql = 'SELECT * FROM users WHERE id = ? AND password = ?';
     db.query(sql, [id, password], (err, results) => {
         if(err){
             console.error(err);
-            return res.status(500).json({ message: 'Server error' });
+            return res.status(500).json({ error: 'Server error' });
         }
         if(results.length > 0){
-            res.status(200).json({ message: 'Login successful' });
+            res.status(200).json({ message: `Welcome ${id}` });
+            console.log(id, password);         // 콘솔창에 아이디 비밀번호 입력 확인
+            temp = id;
         }else{
-            res.status(401).json({ message: 'Invalid ID or password' });
+            res.status(401).json({ error: 'Invalid ID or password' });
         }
     });
 });
@@ -62,15 +64,15 @@ app.get('/signup', (req, res) => {
 app.post('/signup', (req, res) => {
     const {id, username, password, email} = req.body;
     
-    if(!username || !id || !password || !email) {
-        return res.status(400).send('All fields are required');
+    if(!username || !id || !password || !email){
+        return res.status(400).json({ error: 'All fields are required' });
     }
 
     const sqlINSERT = 'INSERT INTO users (id, username, password, email) VALUES (?, ?, ?, ?)';
     db.query(sqlINSERT, [id, username, password, email], (err, result) => {
         if(err){
             console.error(err);
-            return res.status(500).send('Server error');
+            return res.status(500).json({ error: 'Server error' });
         }
         res.status(200).send('User registered successfully');
     });
@@ -110,6 +112,9 @@ app.get('/dashboard_posts/:id', (req, res) => {
     });
 });
 
+// DASHBOARD 에서 특정 게시물 삭제하기
+
+
 
 // Posting Page 접속 setting
 app.get('/write', (req, res) => {
@@ -117,14 +122,14 @@ app.get('/write', (req, res) => {
 });
 
 // Post 작성 setting
-app.post('/posts', (req, res) => {
+app.post('/write', (req, res) => {
     const { title, author, content } = req.body;
 
     if(!title || !author || !content){
         return res.status(400).send('All fields are required');
     }
-    const sql = 'INSERT INTO posts (title, author, content) VALUES (?, ?, ?)';
-    db.query(sql, [title, author, content], (err, result) => {
+    const sql = 'INSERT INTO posts (title, author, content, ID) VALUES (?, ?, ?, ?)';
+    db.query(sql, [title, author, content, temp], (err, result) => {
         if(err){
             console.error('Error inserting data into the database:', err);
             return res.status(500).send('Server error');
@@ -132,6 +137,7 @@ app.post('/posts', (req, res) => {
         res.status(200).json({ success: true, message: 'posting success!' });
     });
 });
+
 
 
 // 서버 시작

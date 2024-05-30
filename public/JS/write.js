@@ -7,7 +7,7 @@ document.getElementById('writeForm').addEventListener('submit', function(event) 
     const author = document.getElementById('author').value;
     const content = document.getElementById('content').value;
 
-    fetch('/posts', {
+    fetch('/write', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
