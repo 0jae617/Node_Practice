@@ -1,7 +1,7 @@
 // 기본 setting
 const express = require('express');
 const mysql = require('mysql2');
-const app = express();
+const app = express();   // Express 애플리케이션 인스턴스 생성
 const PORT = 3000;
 
 // 미들웨어 등록
@@ -46,7 +46,7 @@ app.post('/', (req, res) => {
         }
         if(results.length > 0){
             res.status(200).json({ message: `Welcome ${id}` });
-            console.log(id, password);         // 콘솔창에 아이디 비밀번호 입력 확인
+            console.log(id, password);         // 로그인 성공 시 콘솔창에 아이디 비밀번호 입력 확인
             temp = id;
         }else{
             res.status(401).json({ error: 'Invalid ID or password' });
@@ -63,16 +63,16 @@ app.get('/signup', (req, res) => {
 // 회원가입 실행 메서드 setting
 app.post('/signup', (req, res) => {
     const {id, username, password, email} = req.body;
-    
+
     if(!username || !id || !password || !email){
-        return res.status(400).json({ error: 'All fields are required' });
+        return res.status(400).json({error: 'All fields are required'});
     }
 
     const sqlINSERT = 'INSERT INTO users (id, username, password, email) VALUES (?, ?, ?, ?)';
     db.query(sqlINSERT, [id, username, password, email], (err, result) => {
         if(err){
             console.error(err);
-            return res.status(500).json({ error: 'Server error' });
+            return res.status(500).json({error: 'Server error'});
         }
         res.status(200).send('User registered successfully');
     });
@@ -96,16 +96,16 @@ app.get('/dashboard_posts', (req, res) => {
     });
 });
 
-// DASHBOARD 에 특정 게시글 내용 가져오기
+// DASHBOARD 에서 특정 post 내용 보여주기
 app.get('/dashboard_posts/:id', (req, res) => {
     const postId = req.params.id;
     const sql = 'SELECT title, author, content FROM posts WHERE post_id = ?';
     db.query(sql, [postId], (err, results) => {
-        if(err) {
+        if(err){
             console.error(err);
             return res.status(500).send('Database query error');
         }
-        if(results.length === 0) {
+        if(results.length === 0){
             return res.status(404).send('Post not found');
         }
         res.json(results[0]);
@@ -113,7 +113,18 @@ app.get('/dashboard_posts/:id', (req, res) => {
 });
 
 // DASHBOARD 에서 특정 게시물 삭제하기
-
+// app.delete('/dashboard_posts/:id', (req, res) => {
+//     const postId = req.params.id;
+//     const ID = temp;
+//     const sql = 'DELETE FROM posts WHERE post_id = ? AND ID = ?';
+//     db.query(sql, [postId, ID],  (error, results, fields) => {
+//         if (error) {
+//           console.error('Error deleting tuple:', error);
+//           return;
+//         }
+//         console.log('Tuple deleted successfully:', results.affectedRows);
+//       });
+// });
 
 
 // Posting Page 접속 setting
@@ -126,13 +137,13 @@ app.post('/write', (req, res) => {
     const { title, author, content } = req.body;
 
     if(!title || !author || !content){
-        return res.status(400).send('All fields are required');
+        return res.status(400).json({ error: 'All fields are required' });
     }
     const sql = 'INSERT INTO posts (title, author, content, ID) VALUES (?, ?, ?, ?)';
     db.query(sql, [title, author, content, temp], (err, result) => {
         if(err){
             console.error('Error inserting data into the database:', err);
-            return res.status(500).send('Server error');
+            return res.status(500).json({ error: 'Server error' });
         }
         res.status(200).json({ success: true, message: 'posting success!' });
     });
