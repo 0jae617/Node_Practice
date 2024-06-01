@@ -13,10 +13,10 @@ app.use(express.static('public'));
 
 // DB setting
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'dudwo@03',  // MySQL의 root 비밀번호
-    database: 'nodepractice',
+    host: 'jay-nodepractice.ch2csciqyk85.ap-northeast-2.rds.amazonaws.com',
+    user: 'admin',
+    password: 'min0907890',  // MySQL의 root 비밀번호
+    database: 'nodepractice1',
 });
 
 db.connect((err) => {
