@@ -112,27 +112,33 @@ app.get('/dashboard_posts/:id', (req, res) => {
     });
 });
 
-// DASHBOARD 에서 특정 게시물 삭제하기
-// app.delete('/dashboard_posts/:id', (req, res) => {
-//     const postId = req.params.id;
-//     const ID = temp;
-//     const sql = 'DELETE FROM posts WHERE post_id = ? AND ID = ?';
-//     db.query(sql, [postId, ID],  (error, results, fields) => {
-//         if (error) {
-//           console.error('Error deleting tuple:', error);
-//           return;
-//         }
-//         console.log('Tuple deleted successfully:', results.affectedRows);
-//       });
-// });
+// DASHBOARD 에서 특정 post 삭제하기
+app.delete('/dashboard_posts/:id', (req, res) => {
+    const postId = req.params.id;
+    const ID = temp; // 현재 로그인한 사용자 ID 가져오기
+  
+    const sql = 'DELETE FROM posts WHERE post_id = ? AND ID = ?';
+    db.query(sql, [postId, ID], (error, results) => {
+      if (error) {
+        console.error('Error deleting tuple:', error);
+        return res.status(500).json({ success: false, message:'Error deleting tuple' });
+      }
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: 'Permission denied' });
+      }
+
+      console.log('Tuple deleted successfully:', results.affectedRows);
+      res.status(200).json({ success: true, message: 'Tuple deleted successfully' });
+    });
+  });
 
 
-// Posting Page 접속 setting
+// Post 작성 페이지 접속 setting
 app.get('/write', (req, res) => {
     res.sendFile(__dirname + '/public/write.html');
 });
 
-// Post 작성 setting
+// Post 작성 실행 setting
 app.post('/write', (req, res) => {
     const { title, author, content } = req.body;
 

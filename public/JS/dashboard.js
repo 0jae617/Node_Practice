@@ -15,33 +15,39 @@ document.addEventListener('DOMContentLoaded', () => {  // posts 목록 가져오
             });
         })
         .catch(error => console.error('Error during fetching posts:', error));
-});
 
-function showPost(postId){
-    fetch(`/dashboard_posts/${postId}`)
-        .then(res => res.json())
-        .then(post => {
-            document.getElementById('post-title').textContent = post.title;
-            document.getElementById('post-author').textContent = `Author: ${post.author}`;
-            document.getElementById('post-body').textContent = post.content;
-            document.getElementById('post-content').style.display = 'block';
+
+    function deletePost(id) {   // 게시물 삭제 함수
+        fetch(`/dashboard_posts/${id}`, {
+            method: 'DELETE'
         })
-        .catch(error => console.error('Error fetching post:', error));
-}
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+            alert('게시물 삭제 성공');
+            location.reload();
+            } else {
+            alert(`게시물 삭제 실패: ${result.message}`);
+            }
+        })
+        .catch(error => console.error('Error deleting post:', error));
+        }
 
 
-// async function deletePost(postId){
-//     fetch(`/dashboard_posts/${id}`, {
-//         method: 'DELETE'
-//     })
-//     .then(response => response.json())
-//     .then(result => {
-//         if(result.success){
-//             // 게시물 삭제 후 페이지 리로드
-//             location.reload();
-//         }else{
-//             alert('게시물 삭제 실패');
-//         }
-//     })
-//     .catch(error => console.error('Error deleting post:', error));
-// }
+    function showPost(postId){   // 게시물 불러오기 함수
+        fetch(`/dashboard_posts/${postId}`)
+            .then(res => res.json())
+            .then(post => {
+                document.getElementById('post-title').textContent = post.title;
+                document.getElementById('post-author').textContent = `Author: ${post.author}`;
+                document.getElementById('post-body').textContent = post.content;
+                document.getElementById('post-content').style.display = 'block';
+
+                const deleteButton = document.getElementById('delete-button');  // 삭제 버튼에 게시자 ID 전달
+                deleteButton.onclick = function() {
+                    deletePost(postId);
+                };
+            })
+            .catch(error => console.error('Error fetching post:', error));
+    }
+});
